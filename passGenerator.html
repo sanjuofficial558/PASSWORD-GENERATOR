@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- tailwind link here -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>Password Generator</title>
+</head>
+
+<body class="bg-[#142b61]">
+    <div class="w-[450px] border-2 p-5 text-white mx-auto my-5">
+        <div class="text-center">
+            <h2 class="text-[33px] my-3">Password Generator</h2>
+            <input type="text" placeholder="Click on generate button" id="inputField"
+                class="w-[100%] text-[19px] p-2 text-black rounded outline-0 bg-white" disabled>
+                <p class="my-5" id="message" style="font-size: 20px;"></p>
+
+            <div class="my-[15px]">
+                <button class="mx-1 text-[18px] bg-[#7727a8] p-1 px-3 rounded-md" id="generateBtn">Generate</button>
+                <button class="text-[18px] bg-[#7727a8] p-1 px-3 rounded-md" id="copyClipboard">Copy to
+                    clipboard</button>
+                <button class="text-[18px] bg-[orange] p-1 px-3 rounded-md" id="reset">Reset</button>
+            </div>
+        </div>
+        <div class="my-3">
+            <label for="length" class="text-[19px] font-medium">Password Length</label>
+            <input type="number" id="length" value="10"
+                class="float-right w-[80px] bg-[transparent] border-2 rounded-sm outline-0 px-[8px]">
+        </div>
+        <div class="my-3">
+            <label for="uppercase" class="text-[19px] font-medium">Include uppercase letters</label>
+            <input type="checkbox" id="uppercase" class="float-right" checked>
+        </div>
+        <div class="my-3">
+            <label for="lowercase" class="text-[19px] font-medium">Include lowercase letters</label>
+            <input type="checkbox" id="lowercase" class="float-right" checked>
+        </div>
+        <div class="my-3">
+            <label for="number" class="text-[19px] font-medium">Include Numbers</label>
+            <input type="checkbox" id="number" class="float-right" checked>
+        </div>
+        <div class="my-3">
+            <label for="symbol" class="text-[19px] font-medium">Include Symbols</label>
+            <input type="checkbox" id="symbol" class="float-right" checked>
+        </div>
+    </div>
+
+    <script>
+        let inputField = document.getElementById("inputField");
+        let lengthEl = document.querySelector("#length");
+        let uppercaseEl = document.querySelector("#uppercase");
+        let lowercaseEl = document.querySelector("#lowercase");
+        let numberEl = document.querySelector("#number");
+        let symbolEl = document.querySelector("#symbol");
+
+
+
+        // Define character sets for the password
+        const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+        const numberChars = '0123456789';
+        const symbolChars = '!@#$%^&*()-_=+[]{}|;:,.<>?';
+
+
+        // generateBtn function here
+        generateBtn.addEventListener("click", () => {
+            const length = lengthEl.value;
+            const lower = lowercaseEl.checked;
+            const upper = uppercaseEl.checked;
+            const number = numberEl.checked;
+            const symbol = symbolEl.checked;
+            const password = generatePassword(length, lower, upper, number, symbol);
+            inputField.value = password
+
+        });
+
+        // Function to generate a random character from a given character set
+        function getRandomChar(charSet) {
+            const randomIndex = Math.floor(Math.random() * charSet.length +1);
+            // console.log(charSet.charAt(randomIndex));
+            return charSet.charAt(randomIndex);
+        }
+
+        // Function to generate a random password
+        function generatePassword(length, useLowercase, useUppercase, useNumbers, useSpecialChars) {
+            let charSet = '';
+            if (length < 4 || length > 20) {
+                message.innerHTML = 'Password length should be between 4 and 20.'
+                return '';
+            }
+
+            if (useLowercase) charSet += lowercaseChars;
+            if (useUppercase) charSet += uppercaseChars;
+            if (useNumbers) charSet += numberChars;
+            if (useSpecialChars) charSet += symbolChars;
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomChar = getRandomChar(charSet);
+                password += randomChar;
+            }
+            return password;
+        }
+
+
+
+        // copy function here
+        copyClipboard.addEventListener("click", () => {
+            let inputValue = inputField.value;
+
+            if(inputValue == ""){
+                message.innerText = "Please generate password"
+                message.classList.add("text-[red]")
+            }
+            else{
+                navigator.clipboard.writeText(inputValue);
+                inputField.style.backgroundColor = "#14b537";
+                message.innerText = "copied"
+                message.classList.add("text-[green]")
+                console.log(inputValue);
+            }
+
+        })
+
+        // reset function here
+        reset.addEventListener("click", () => {
+            inputField.value = "";
+            inputField.style.backgroundColor = "white";
+            message.innerText= ""
+        })
+
+
+    </script>
+</body>
+
+</html>
